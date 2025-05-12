@@ -36,6 +36,33 @@ public class PatientDAO {
         }
     }
 
+    public UUID create(Patient patient, Connection conn) throws DaoException {
+        String sql = "INSERT INTO patient (patient_number, first_name, middle_name, last_name," +
+                "address, telephone_number) VALUES (?,?,?,?,?,?)";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            setPatientParameters(stmt, patient);
+
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DaoException("Creating Patient failed. No rows affected.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    UUID id = UUID.fromString(generatedKeys.getString(1));
+                    patient.setId(id);
+                    return id;
+                } else {
+                    throw new DaoException("Creating Patient failed. No ID obtained.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Creating Patient failed.", e);
+        }
+    }
+
 
     public Patient findById(UUID id) throws DaoException {
         String sql = "SELECT * FROM patient WHERE id = ?";
@@ -105,7 +132,7 @@ public class PatientDAO {
         }
     }
 
-    public void delete(UUID id) throws DaoException {
+    public boolean delete(UUID id) throws DaoException {
         String sql = "DELETE FROM patient WHERE id = ?";
 
         try {
@@ -117,6 +144,7 @@ public class PatientDAO {
             if (affectedRows == 0) {
                 throw new DaoException("Patient with id" + id + " not found.");
             }
+            return affectedRows > 0;
         } catch (SQLException e) {
             throw new DaoException("Deleting Patient failed.", e);
         }
@@ -172,7 +200,7 @@ public class PatientDAO {
         stmt.setString(5, patient.getTelephoneNumber());
     }
 
-    public void setPatientParameters(PreparedStatement stmt, Patient patient) throws SQLException {
+    public static void setPatientParameters(PreparedStatement stmt, Patient patient) throws SQLException {
         stmt.setInt(1, patient.getPatientNumber());
 
         if (patient.getFirstName() != null) {

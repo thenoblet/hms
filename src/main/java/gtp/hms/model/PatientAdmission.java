@@ -1,5 +1,6 @@
 package gtp.hms.model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +17,8 @@ public class PatientAdmission {
     private boolean isCurrent;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public PatientAdmission() {}
 
     public PatientAdmission(UUID patientId, UUID wardId, int bedNumber, String diagnosis,
                             UUID treatingDoctorId, LocalDate admissionDate, boolean isCurrent, LocalDate dischargeDate) {
@@ -73,7 +76,7 @@ public class PatientAdmission {
         this.wardId = wardId;
     }
 
-    public int getBedNumber() {
+    public Integer getBedNumber() {
         return bedNumber;
     }
 
@@ -105,4 +108,39 @@ public class PatientAdmission {
         this.admissionDate = admissionDate;
     }
 
+    public LocalDate getDischargeDate() {
+        return dischargeDate;
+    }
+
+    public void setDischargeDate(LocalDate dischargeDate) {
+        this.dischargeDate = dischargeDate;
+    }
+
+    public void setDischargeDate() {
+        this.dischargeDate = LocalDate.now();
+    }
+
+    public boolean getIsCurrent() {
+        return isCurrent;
+    }
+
+    public void setIsCurrent(boolean isCurrent) {
+        this.isCurrent = isCurrent;
+    }
+
+    // In your PatientAdmission model class
+    @Override
+    public String toString() {
+        return "PatientAdmission [" +
+                "id=" + id +
+                ", patientId=" + patientId +
+                ", wardId=" + wardId +
+                ", bedNumber=" + bedNumber +
+                ", diagnosis='" + diagnosis + '\'' +
+                ", doctorId=" + treatingDoctorId +
+                ", admissionDate=" + admissionDate +
+                ", dischargeDate=" + dischargeDate +
+                ", isCurrent=" + isCurrent +
+                ']';
+    }
 }

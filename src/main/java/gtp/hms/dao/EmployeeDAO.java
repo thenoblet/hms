@@ -12,7 +12,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+/**
+ * Data Access Object (DAO) for handling database operations related to Employee entities
+ * and their specialised subclasses (Doctor and Nurse).
+ *
+ * This class provides methods for:
+ * - Adding new employees (generic and specialised)
+ * - Retrieving employee information
+ *
+ * The class handles transactions for operations that span multiple tables.
+ */
 public class EmployeeDAO {
+
+    /**
+     * Adds a generic employee record to the database.
+     *
+     * @param employee the employee entity to be added
+     * @return the generated UUID of the newly created employee
+     * @throws SQLException if:
+     *   - A database access error occurs
+     *   - No generated ID is returned from the database
+     */
     public UUID addEmployee(Employee employee) throws SQLException {
         String sql = "INSERT INTO employee (employee_number, first_name, middle_name, last_name," +
                 "address, phone_number, employee_type) values(?,?,?,?,?,?,?::employee_type)" +
@@ -38,6 +58,14 @@ public class EmployeeDAO {
         }
     }
 
+    /**
+     * Adds a doctor to the database as a transaction spanning both employee and doctor tables.
+     *
+     * @param doctor the doctor entity to be added
+     * @throws SQLException if:
+     *   - A database access error occurs
+     *   - The transaction needs to be rolled back
+     */
     public void addDoctor(Doctor doctor) throws SQLException {
         Connection conn = null;
 
@@ -51,7 +79,7 @@ public class EmployeeDAO {
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setObject(1, employeeId);
-                stmt.setString(2, doctor.getSpeciality());
+                stmt.setString(2, doctor.getSpecialty());
                 stmt.executeUpdate();
             }
 
@@ -69,6 +97,14 @@ public class EmployeeDAO {
         }
     }
 
+    /**
+     * Adds a nurse to the database as a transaction spanning both employee and nurse tables.
+     *
+     * @param nurse the nurse entity to be added
+     * @throws SQLException if:
+     *   - A database access error occurs
+     *   - The transaction needs to be rolled back
+     */
     public void addNurse(Nurse nurse) throws SQLException {
         Connection conn = null;
 
@@ -101,6 +137,15 @@ public class EmployeeDAO {
         }
     }
 
+    /**
+     * Retrieves an employee by their unique identifier.
+     *
+     * @param employeeId the UUID of the employee to retrieve
+     * @return the Employee entity
+     * @throws DaoException if:
+     *   - The employee is not found
+     *   - A database access error occurs
+     */
     public Employee getEmployee(UUID employeeId) throws DaoException {
         Connection conn = null;
 
@@ -123,9 +168,15 @@ public class EmployeeDAO {
         } catch (SQLException e) {
             throw new DaoException("Getting employee failed", e);
         }
-
     }
 
+    /**
+     * Maps a ResultSet row to an Employee entity.
+     *
+     * @param rs the ResultSet containing employee data
+     * @return a populated Employee entity
+     * @throws SQLException if a database access error occurs
+     */
     private Employee mapResultSetToEmployee(ResultSet rs) throws SQLException {
         Employee employee = new Employee();
 
