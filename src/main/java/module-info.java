@@ -4,6 +4,7 @@ module gtp.hms {
 
     requires org.controlsfx.controls;
     requires java.sql;
+    requires java.desktop;
 
     opens gtp.hms.model to javafx.fxml;
     exports gtp.hms.model;

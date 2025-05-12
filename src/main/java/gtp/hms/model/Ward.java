@@ -12,6 +12,8 @@ public class Ward {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public Ward() {}
+
     public Ward(int wardNumber, int numberOfBeds, UUID departmentId, UUID supervisorId) {
 
         this.id = UUID.randomUUID();

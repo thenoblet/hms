@@ -9,14 +9,14 @@ public class Nurse extends Employee {
     private UUID departmentId;
 
     public Nurse() {
-        setEmployeeType(EmployeeType.NURSE);
+        setEmployeeType(EmployeeType.nurse);
     }
 
 
     public Nurse(int employeeNumber, String firstName, String middleName, String lastName,
                  String address,  String phoneNumber, String rotation, double salary, UUID departmentId) {
 
-        super(employeeNumber, firstName, middleName, lastName, address, phoneNumber, EmployeeType.NURSE);
+        super(employeeNumber, firstName, middleName, lastName, address, phoneNumber, EmployeeType.nurse);
         this.rotation = rotation;
         this.salary = salary;
         this.departmentId = departmentId;
@@ -28,7 +28,7 @@ public class Nurse extends Employee {
                  UUID departmentId, LocalDateTime createdAt, LocalDateTime updatedAt) {
 
         super(id, employeeNumber, firstName, middleName, lastName,
-                address, phoneNumber, EmployeeType.NURSE, createdAt, updatedAt);
+                address, phoneNumber, EmployeeType.nurse, createdAt, updatedAt);
 
         this.rotation = rotation;
         this.salary = salary;
